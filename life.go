@@ -22,7 +22,7 @@ func round(coord int, around int) int {
 	return coord
 }
 
-type Field []bool
+type Field []byte
 
 func NewField() Field {
 	var f = make(Field, cols*rows)
@@ -33,7 +33,7 @@ func (f Field) String() string {
 	var builder strings.Builder
 	for i := range cols {
 		for j := range rows {
-			if f[i*cols+j] {
+			if f[i*rows+j] > 0 {
 				builder.WriteString("█ ")
 			} else {
 				builder.WriteString("  ")
@@ -47,16 +47,44 @@ func (f Field) String() string {
 func (f Field) Seed() {
 	for i := range f {
 		x := rand.IntN(100)
-		f[i] = x%4 == 0
+		if x%4 == 0 {
+			f[i] = 1
+		} else {
+			f[i] = 0
+		}
 	}
 }
 
 func (f Field) Alive(x int, y int) bool {
-	return f[x*rows+y]
+	return f[idx(x, y)] == 1
+}
+
+func idx(x int, y int) int {
+	return y*rows + x
 }
 
 func (f Field) AliveNeighbors(x int, y int) int {
-	return 0
+	abs := idx(x, y)
+	start := abs - 4
+	end := abs + 4
+	var result byte
+	for start <= end {
+		if start == abs {
+			start++
+			continue
+		}
+		var idx int
+		if start < 0 {
+			idx = start + rows*cols
+		} else if start >= rows*cols {
+			idx = start % (rows * cols)
+		} else {
+			idx = start
+		}
+		result += f[idx]
+		start++
+	}
+	return int(result)
 }
 
 func main() {
