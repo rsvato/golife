@@ -64,27 +64,21 @@ func idx(x int, y int) int {
 }
 
 func (f Field) AliveNeighbors(x int, y int) int {
-	abs := idx(x, y)
-	start := abs - 4
-	end := abs + 4
-	var result byte
-	for start <= end {
-		if start == abs {
-			start++
-			continue
+	var result int
+	for dx := -1; dx <= 1; dx++ {
+		for dy := -1; dy <= 1; dy++ {
+			if dx == 0 && dy == 0 {
+				continue
+			}
+
+			nx := (x + dx + rows) % rows
+			ny := (y + dy + cols) % cols
+			idx := nx*cols + ny
+
+			result += int(f[idx])
 		}
-		var idx int
-		if start < 0 {
-			idx = start + rows*cols
-		} else if start >= rows*cols {
-			idx = start % (rows * cols)
-		} else {
-			idx = start
-		}
-		result += f[idx]
-		start++
 	}
-	return int(result)
+	return result
 }
 
 func main() {
