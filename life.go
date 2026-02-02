@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"strings"
+	"time"
 )
 
 const (
@@ -22,18 +23,35 @@ func round(coord int, around int) int {
 	return coord
 }
 
-type Field []byte
+type Field struct {
+	cols int
+	rows int
+	data []int
+}
 
 func NewField() Field {
-	var f = make(Field, cols*rows)
-	return f
+	data := make([]int, cols*rows)
+	return Field{
+		cols: cols,
+		rows: rows,
+		data: data,
+	}
+}
+
+func CustomField(cols int, rows int) Field {
+	var data = make([]int, cols*rows)
+	return Field{
+		cols: cols,
+		rows: rows,
+		data: data,
+	}
 }
 
 func (f Field) String() string {
 	var builder strings.Builder
-	for i := range cols {
-		for j := range rows {
-			if f[i*rows+j] > 0 {
+	for i := range f.cols {
+		for j := range f.rows {
+			if f.at(i, j) > 0 {
 				builder.WriteString("█ ")
 			} else {
 				builder.WriteString("  ")
@@ -45,22 +63,32 @@ func (f Field) String() string {
 }
 
 func (f Field) Seed() {
-	for i := range f {
+	for i := range f.data {
 		x := rand.IntN(100)
 		if x%4 == 0 {
-			f[i] = 1
+			f.data[i] = 1
 		} else {
-			f[i] = 0
+			f.data[i] = 0
 		}
 	}
 }
 
 func (f Field) Alive(x int, y int) bool {
-	return f[idx(x, y)] == 1
+	return f.at(x, y) == 1
 }
 
-func idx(x int, y int) int {
-	return y*rows + x
+func (f Field) at(x int, y int) int {
+	idx := x*f.cols + y
+	return f.data[idx]
+}
+
+func (f Field) setAt(x int, y int, alive bool) {
+	idx := x*f.cols + y
+	if alive {
+		f.data[idx] = 1
+	} else {
+		f.data[idx] = 0
+	}
 }
 
 func (f Field) AliveNeighbors(x int, y int) int {
@@ -71,18 +99,50 @@ func (f Field) AliveNeighbors(x int, y int) int {
 				continue
 			}
 
-			nx := (x + dx + rows) % rows
-			ny := (y + dy + cols) % cols
-			idx := nx*cols + ny
+			nx := (x + dx + f.rows) % f.rows
+			ny := (y + dy + f.cols) % f.cols
 
-			result += int(f[idx])
+			result += f.at(nx, ny)
 		}
 	}
 	return result
 }
 
+func (f Field) Next(x int, y int) bool {
+	aliveAround := f.AliveNeighbors(x, y)
+	alive := f.Alive(x, y)
+	if alive {
+		return aliveAround == 2 || aliveAround == 3
+	} else {
+		return aliveAround == 3
+	}
+}
+
+func (f Field) Step() Field {
+	newField := Field{
+		cols: f.cols,
+		rows: f.rows,
+		data: make([]int, f.cols*f.rows),
+	}
+	for i := range f.cols {
+		for j := range f.rows {
+			newField.setAt(i, j, f.Next(i, j))
+		}
+	}
+	return newField
+}
+
 func main() {
-	f := NewField()
-	f.Seed()
+	f := CustomField(5, 5)
+	f.setAt(2, 1, true)
+	f.setAt(2, 2, true)
+	f.setAt(2, 3, true)
 	fmt.Println(f)
+	for _ = range 5 {
+		f = f.Step()
+		fmt.Println(f)
+		time.Sleep(1 * time.Second)
+		fmt.Print("\n")
+	}
+
 }
