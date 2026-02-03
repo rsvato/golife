@@ -140,3 +140,18 @@ func TestStep_Block(t *testing.T) {
 		}
 	}
 }
+
+func TestReadStrings(t *testing.T) {
+	input := `
+	.#.
+	.#.
+	.#.
+	`
+	f := ReadStrings(input)
+	if f.cols != 3 {
+		t.Fatalf("Cols should be 3, but is %d", f.cols)
+	}
+	if f.rows != 3 {
+		t.Fatalf("Rows should be 3, but is %d", f.rows)
+	}
+}
