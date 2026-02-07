@@ -227,24 +227,26 @@ var File_api_lifegame_proto protoreflect.FileDescriptor
 
 const file_api_lifegame_proto_rawDesc = "" +
 	"\n" +
-	"\x12api/lifegame.proto\x12\x06golife\"\x84\x01\n" +
+	"\x12api/lifegame.proto\x12\x03api\"\x84\x01\n" +
 	"\x05Board\x12\x14\n" +
 	"\x05width\x18\x01 \x01(\x05R\x05width\x12\x16\n" +
 	"\x06height\x18\x02 \x01(\x05R\x06height\x12\x1f\n" +
 	"\n" +
 	"rle_string\x18\x03 \x01(\tH\x00R\trleString\x12\x1d\n" +
 	"\traw_cells\x18\x04 \x01(\fH\x00R\brawCellsB\r\n" +
-	"\vdata_format\"b\n" +
-	"\x11SimulationRequest\x122\n" +
-	"\rinitial_state\x18\x01 \x01(\v2\r.golife.BoardR\finitialState\x12\x19\n" +
-	"\bdelay_ms\x18\x02 \x01(\x05R\adelayMs\"f\n" +
-	"\x10SimulationUpdate\x122\n" +
-	"\rcurrent_state\x18\x01 \x01(\v2\r.golife.BoardR\fcurrentState\x12\x1e\n" +
+	"\vdata_format\"_\n" +
+	"\x11SimulationRequest\x12/\n" +
+	"\rinitial_state\x18\x01 \x01(\v2\n" +
+	".api.BoardR\finitialState\x12\x19\n" +
+	"\bdelay_ms\x18\x02 \x01(\x05R\adelayMs\"c\n" +
+	"\x10SimulationUpdate\x12/\n" +
+	"\rcurrent_state\x18\x01 \x01(\v2\n" +
+	".api.BoardR\fcurrentState\x12\x1e\n" +
 	"\n" +
 	"generation\x18\x02 \x01(\x05R\n" +
-	"generation2Y\n" +
-	"\vLifeService\x12J\n" +
-	"\x0fStreamEvolution\x12\x19.golife.SimulationRequest\x1a\x18.golife.SimulationUpdate(\x010\x01B!Z\x1f://github.com/rsvato/golife;apib\x06proto3"
+	"generation2S\n" +
+	"\vLifeService\x12D\n" +
+	"\x0fStreamEvolution\x12\x16.api.SimulationRequest\x1a\x15.api.SimulationUpdate(\x010\x01B!Z\x1f://github.com/rsvato/golife;apib\x06proto3"
 
 var (
 	file_api_lifegame_proto_rawDescOnce sync.Once
@@ -260,15 +262,15 @@ func file_api_lifegame_proto_rawDescGZIP() []byte {
 
 var file_api_lifegame_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_api_lifegame_proto_goTypes = []any{
-	(*Board)(nil),             // 0: golife.Board
-	(*SimulationRequest)(nil), // 1: golife.SimulationRequest
-	(*SimulationUpdate)(nil),  // 2: golife.SimulationUpdate
+	(*Board)(nil),             // 0: api.Board
+	(*SimulationRequest)(nil), // 1: api.SimulationRequest
+	(*SimulationUpdate)(nil),  // 2: api.SimulationUpdate
 }
 var file_api_lifegame_proto_depIdxs = []int32{
-	0, // 0: golife.SimulationRequest.initial_state:type_name -> golife.Board
-	0, // 1: golife.SimulationUpdate.current_state:type_name -> golife.Board
-	1, // 2: golife.LifeService.StreamEvolution:input_type -> golife.SimulationRequest
-	2, // 3: golife.LifeService.StreamEvolution:output_type -> golife.SimulationUpdate
+	0, // 0: api.SimulationRequest.initial_state:type_name -> api.Board
+	0, // 1: api.SimulationUpdate.current_state:type_name -> api.Board
+	1, // 2: api.LifeService.StreamEvolution:input_type -> api.SimulationRequest
+	2, // 3: api.LifeService.StreamEvolution:output_type -> api.SimulationUpdate
 	3, // [3:4] is the sub-list for method output_type
 	2, // [2:3] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name

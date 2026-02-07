@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	LifeService_StreamEvolution_FullMethodName = "/golife.LifeService/StreamEvolution"
+	LifeService_StreamEvolution_FullMethodName = "/api.LifeService/StreamEvolution"
 )
 
 // LifeServiceClient is the client API for LifeService service.
@@ -100,7 +100,7 @@ type LifeService_StreamEvolutionServer = grpc.BidiStreamingServer[SimulationRequ
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var LifeService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "golife.LifeService",
+	ServiceName: "api.LifeService",
 	HandlerType: (*LifeServiceServer)(nil),
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{

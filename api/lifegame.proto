@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package golife;
+package api;
 option go_package = "://github.com/rsvato/golife;api";
 
 message Board {
