@@ -1,4 +1,4 @@
-package golife
+package lib
 
 import (
 	"math/rand/v2"

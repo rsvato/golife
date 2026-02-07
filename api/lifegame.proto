@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package golife;
+option go_package = "://github.com/rsvato/golife;api";
+
+message Board {
+    int32 width = 1;
+    int32 height = 2;
+
+    oneof data_format {
+        string rle_string = 3;
+        bytes raw_cells = 4;
+    }
+}
+
+message SimulationRequest {
+  Board initial_state = 1;
+  int32 delay_ms = 2;        // Скорость симуляции
+}
+
+message SimulationUpdate {
+  Board current_state = 1;
+  int32 generation = 2;
+}
+
+service LifeService {
+  rpc StreamEvolution(stream SimulationRequest) returns (stream SimulationUpdate);
+}

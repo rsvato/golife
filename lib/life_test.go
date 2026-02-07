@@ -1,4 +1,4 @@
-package golife
+package lib
 
 import (
 	"testing"

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	golife "github.com/rsvato/golife/lib"
+	"github.com/rsvato/golife/lib"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 		..#..
 		.....
 		`
-	f := *golife.ReadStrings(board)
+	f := *lib.ReadStrings(board)
 	fmt.Println(f)
 	for i := 0; i < 5; i++ {
 		fmt.Print("\033[H\033[2J")
