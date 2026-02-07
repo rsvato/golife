@@ -1,4 +1,4 @@
-package main
+package golife
 
 import (
 	"testing"
@@ -153,5 +153,16 @@ func TestReadStrings(t *testing.T) {
 	}
 	if f.rows != 3 {
 		t.Fatalf("Rows should be 3, but is %d", f.rows)
+	}
+}
+
+func TestRleString(t *testing.T) {
+	input := "4#"
+	f := ReadRle(2, 2, input)
+	if f.cols != 2 {
+		t.Fatalf("Cols should be 2")
+	}
+	if f.rows != 2 {
+		t.Fatalf("Rows should be 2")
 	}
 }

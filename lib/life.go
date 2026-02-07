@@ -1,10 +1,8 @@
-package main
+package golife
 
 import (
-	"fmt"
 	"math/rand/v2"
 	"strings"
-	"time"
 )
 
 type Field struct {
@@ -105,59 +103,4 @@ func (f Field) Step() Field {
 		}
 	}
 	return newField
-}
-
-func ReadStrings(s string) *Field {
-	rows := strings.Split(strings.TrimSpace(s), "\n")
-	var cleanRows []string
-
-    for _, r := range rows {
-        trimmed := strings.TrimSpace(r)
-        if trimmed != "" {
-            cleanRows = append(cleanRows, trimmed)
-        }
-    }
-
-    if len(cleanRows) == 0 {
-    	return &Field{
-     		cols: 0,
-       		rows: 0,
-         	data: make([]int, 0),
-     	}
-    }
-
-	height := len(cleanRows)
-	width := len(cleanRows[0])
-	data := make([]int, height * width)
-	result := Field {
-		cols: width,
-		rows: height,
-		data: data,
-	}
-	for i, row := range cleanRows {
-		row = strings.TrimRight(row, "\r")
-		for j, ch := range row {
-			alive := false
-			if (ch == '#') {
-				alive = true
-			}
-			result.setAt(i, j, alive)
-		}
-	}
-	return &result
-}
-
-func main() {
-	f := NewField(5, 7)
-	f.setAt(2, 1, true)
-	f.setAt(2, 2, true)
-	f.setAt(2, 3, true)
-	fmt.Println(f)
-	for i := 0; i < 5; i++ {
-		fmt.Print("\033[H\033[2J")
-		f = f.Step()
-		fmt.Println(f)
-		time.Sleep(1 * time.Second)
-	}
-
 }
