@@ -65,6 +65,11 @@ func TestSaveRle(t *testing.T) {
 			sourceRle: "5#",
 			cols:      5, rows: 1,
 		},
+		{
+			name:      "Mixed RLE",
+			sourceRle: "7.1#4.1#4.1#7.",
+			cols:      5, rows: 5,
+		},
 	}
 
 	for _, test := range tests {
