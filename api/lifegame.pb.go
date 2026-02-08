@@ -122,7 +122,7 @@ func (*Board_RawCells) isBoard_DataFormat() {}
 type SimulationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	InitialState  *Board                 `protobuf:"bytes,1,opt,name=initial_state,json=initialState,proto3" json:"initial_state,omitempty"`
-	DelayMs       int32                  `protobuf:"varint,2,opt,name=delay_ms,json=delayMs,proto3" json:"delay_ms,omitempty"` // Скорость симуляции
+	DelayMs       int32                  `protobuf:"varint,2,opt,name=delay_ms,json=delayMs,proto3" json:"delay_ms,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
