@@ -53,3 +53,27 @@ func TestReadRle(t *testing.T) {
 	}
 
 }
+
+func TestSaveRle(t *testing.T) {
+	tests := []struct {
+		name       string
+		sourceRle  string
+		cols, rows int
+	}{
+		{
+			name:      "Simple RLE",
+			sourceRle: "5#",
+			cols:      5, rows: 1,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			f := ReadRle(test.cols, test.rows, test.sourceRle)
+			res := SaveRle(*f)
+			if test.sourceRle != res {
+				t.Errorf("SaveRle(%q) = %v, want %v", test.sourceRle, res, test.sourceRle)
+			}
+		})
+	}
+}
