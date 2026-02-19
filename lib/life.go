@@ -11,9 +11,9 @@ type Field struct {
 	data []int
 }
 
-func NewField(cols int, rows int) Field {
+func NewField(cols int, rows int) *Field {
 	data := make([]int, cols*rows)
-	return Field{
+	return &Field{
 		cols: cols,
 		rows: rows,
 		data: data,
@@ -28,7 +28,7 @@ func (f Field) String() string {
 			if f.Alive(i, j) {
 				builder.WriteString("█ ")
 			} else {
-				builder.WriteString("  ")
+				builder.WriteString(". ")
 			}
 		}
 		builder.WriteString("\n")
@@ -91,7 +91,7 @@ func (f Field) Next(x int, y int) bool {
 	return aliveAround == 3
 }
 
-func (f Field) Step() Field {
+func (f Field) Step() *Field {
 	newField := Field{
 		cols: f.cols,
 		rows: f.rows,
@@ -102,5 +102,5 @@ func (f Field) Step() Field {
 			newField.setAt(i, j, f.Next(i, j))
 		}
 	}
-	return newField
+	return &newField
 }
