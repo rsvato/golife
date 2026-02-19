@@ -24,6 +24,10 @@ func (s *lifeServer) StreamEvolution(stream api.LifeService_StreamEvolutionServe
 	}
 	width := int(req.InitialState.Width)
 	height := int(req.InitialState.Width)
+	delayMs := int(req.DelayMs)
+	if delayMs == 0 {
+		delayMs = 1000
+	}
 	field := lib.ReadRle(width, height, req.InitialState.GetRleString())
 	generation := 0
 	for {
@@ -46,7 +50,7 @@ func (s *lifeServer) StreamEvolution(stream api.LifeService_StreamEvolutionServe
 		}
 
 		select {
-		case <-time.After(500 * time.Millisecond):
+		case <-time.After(time.Duration(delayMs) * time.Millisecond):
 		case <-stream.Context().Done():
 			return stream.Context().Err()
 		}

@@ -30,6 +30,7 @@ func main() {
 				RleString: "7.1#4.1#4.1#7.",
 			},
 		},
+		DelayMs: 500,
 	}
 
 	stream, err := client.StreamEvolution(context.Background())
