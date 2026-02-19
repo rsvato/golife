@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net"
 	"time"
@@ -34,7 +33,6 @@ func (s *lifeServer) StreamEvolution(stream api.LifeService_StreamEvolutionServe
 		field = field.Step()
 		generation++
 		nextRle := lib.SaveRle(*field)
-		fmt.Print(field.String())
 
 		update := &api.SimulationUpdate{
 			Generation: int32(generation),
