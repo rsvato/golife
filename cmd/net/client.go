@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
-	"os/exec"
-	"runtime"
+	"time"
 
 	"github.com/rsvato/golife/api"
 	"github.com/rsvato/golife/lib"
@@ -15,25 +13,31 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+const connectionTimeout = 5 * time.Second
+
 func main() {
 	conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Cannot dial: %v", err)
 	}
 	defer conn.Close()
+
+	conn.Connect()
+
+	ctx, cancel := context.WithTimeout(context.Background(), connectionTimeout)
+	defer cancel()
+
 	client := api.NewLifeServiceClient(conn)
 	req := &api.SimulationRequest{
 		InitialState: &api.Board{
-			Width:  5,
-			Height: 5,
-			DataFormat: &api.Board_RleString{
-				RleString: "7.1#4.1#4.1#7.",
-			},
+			Width:     5,
+			Height:    5,
+			RleString: "7.1#4.1#4.1#7.",
 		},
 		DelayMs: 500,
 	}
 
-	stream, err := client.StreamEvolution(context.Background())
+	stream, err := client.StreamEvolution(ctx)
 	if err != nil {
 		log.Fatalf("Couldn't open stream: %v", err)
 	}
@@ -69,12 +73,5 @@ func renderField(f *lib.Field) {
 }
 
 func clearScreen() {
-	var cmd *exec.Cmd
-	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cls")
-	} else {
-		cmd = exec.Command("clear")
-	}
-	cmd.Stdout = os.Stdout
-	cmd.Run()
+	fmt.Print("\033[H\033[2J")
 }

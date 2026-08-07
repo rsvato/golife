@@ -22,14 +22,10 @@ const (
 )
 
 type Board struct {
-	state  protoimpl.MessageState `protogen:"open.v1"`
-	Width  int32                  `protobuf:"varint,1,opt,name=width,proto3" json:"width,omitempty"`
-	Height int32                  `protobuf:"varint,2,opt,name=height,proto3" json:"height,omitempty"`
-	// Types that are valid to be assigned to DataFormat:
-	//
-	//	*Board_RleString
-	//	*Board_RawCells
-	DataFormat    isBoard_DataFormat `protobuf_oneof:"data_format"`
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Width         int32                  `protobuf:"varint,1,opt,name=width,proto3" json:"width,omitempty"`
+	Height        int32                  `protobuf:"varint,2,opt,name=height,proto3" json:"height,omitempty"`
+	RleString     string                 `protobuf:"bytes,3,opt,name=rle_string,json=rleString,proto3" json:"rle_string,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -78,46 +74,12 @@ func (x *Board) GetHeight() int32 {
 	return 0
 }
 
-func (x *Board) GetDataFormat() isBoard_DataFormat {
-	if x != nil {
-		return x.DataFormat
-	}
-	return nil
-}
-
 func (x *Board) GetRleString() string {
 	if x != nil {
-		if x, ok := x.DataFormat.(*Board_RleString); ok {
-			return x.RleString
-		}
+		return x.RleString
 	}
 	return ""
 }
-
-func (x *Board) GetRawCells() []byte {
-	if x != nil {
-		if x, ok := x.DataFormat.(*Board_RawCells); ok {
-			return x.RawCells
-		}
-	}
-	return nil
-}
-
-type isBoard_DataFormat interface {
-	isBoard_DataFormat()
-}
-
-type Board_RleString struct {
-	RleString string `protobuf:"bytes,3,opt,name=rle_string,json=rleString,proto3,oneof"`
-}
-
-type Board_RawCells struct {
-	RawCells []byte `protobuf:"bytes,4,opt,name=raw_cells,json=rawCells,proto3,oneof"`
-}
-
-func (*Board_RleString) isBoard_DataFormat() {}
-
-func (*Board_RawCells) isBoard_DataFormat() {}
 
 type SimulationRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -227,14 +189,12 @@ var File_api_lifegame_proto protoreflect.FileDescriptor
 
 const file_api_lifegame_proto_rawDesc = "" +
 	"\n" +
-	"\x12api/lifegame.proto\x12\x03api\"\x84\x01\n" +
+	"\x12api/lifegame.proto\x12\x03api\"T\n" +
 	"\x05Board\x12\x14\n" +
 	"\x05width\x18\x01 \x01(\x05R\x05width\x12\x16\n" +
-	"\x06height\x18\x02 \x01(\x05R\x06height\x12\x1f\n" +
+	"\x06height\x18\x02 \x01(\x05R\x06height\x12\x1d\n" +
 	"\n" +
-	"rle_string\x18\x03 \x01(\tH\x00R\trleString\x12\x1d\n" +
-	"\traw_cells\x18\x04 \x01(\fH\x00R\brawCellsB\r\n" +
-	"\vdata_format\"_\n" +
+	"rle_string\x18\x03 \x01(\tR\trleString\"_\n" +
 	"\x11SimulationRequest\x12/\n" +
 	"\rinitial_state\x18\x01 \x01(\v2\n" +
 	".api.BoardR\finitialState\x12\x19\n" +
@@ -246,7 +206,7 @@ const file_api_lifegame_proto_rawDesc = "" +
 	"generation\x18\x02 \x01(\x05R\n" +
 	"generation2S\n" +
 	"\vLifeService\x12D\n" +
-	"\x0fStreamEvolution\x12\x16.api.SimulationRequest\x1a\x15.api.SimulationUpdate(\x010\x01B!Z\x1f://github.com/rsvato/golife;apib\x06proto3"
+	"\x0fStreamEvolution\x12\x16.api.SimulationRequest\x1a\x15.api.SimulationUpdate(\x010\x01B\"Z github.com/rsvato/golife/api;apib\x06proto3"
 
 var (
 	file_api_lifegame_proto_rawDescOnce sync.Once
@@ -282,10 +242,6 @@ func init() { file_api_lifegame_proto_init() }
 func file_api_lifegame_proto_init() {
 	if File_api_lifegame_proto != nil {
 		return
-	}
-	file_api_lifegame_proto_msgTypes[0].OneofWrappers = []any{
-		(*Board_RleString)(nil),
-		(*Board_RawCells)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
+	"google.golang.org/grpc/status"
 
 	api "github.com/rsvato/golife/api"
 	lib "github.com/rsvato/golife/lib"
@@ -16,17 +18,35 @@ type lifeServer struct {
 	api.UnimplementedLifeServiceServer
 }
 
+const maxSize = 1024
+
 func (s *lifeServer) StreamEvolution(stream api.LifeService_StreamEvolutionServer) error {
 	req, err := stream.Recv()
 	if err != nil {
 		return err
 	}
+
+	if req.InitialState == nil {
+		return status.Error(codes.InvalidArgument, "initial_state is required")
+	}
+
 	width := int(req.InitialState.Width)
-	height := int(req.InitialState.Width)
+	height := int(req.InitialState.Height)
+
+	if width <= 0 || height <= 0 {
+		return status.Error(codes.InvalidArgument, "width and height must be positive")
+	}
+
+	if width > maxSize || height > maxSize {
+		return status.Error(codes.InvalidArgument, "dimension is too large (max 1024)")
+	}
+
 	delayMs := int(req.DelayMs)
-	if delayMs == 0 {
+	if delayMs <= 0 {
+		log.Printf("delay set to 1000, was %d", delayMs)
 		delayMs = 1000
 	}
+
 	field := lib.ReadRle(width, height, req.InitialState.GetRleString())
 	generation := 0
 	for {
@@ -37,9 +57,9 @@ func (s *lifeServer) StreamEvolution(stream api.LifeService_StreamEvolutionServe
 		update := &api.SimulationUpdate{
 			Generation: int32(generation),
 			CurrentState: &api.Board{
-				Width:      int32(width),
-				Height:     int32(height),
-				DataFormat: &api.Board_RleString{RleString: nextRle},
+				Width:     int32(width),
+				Height:    int32(height),
+				RleString: nextRle,
 			},
 		}
 
